@@ -4,6 +4,7 @@ import {
   Button,
   Input,
   Form,
+  FormItem,
   Row,
   Col,
   Container,
@@ -16,12 +17,15 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Avatar
+  Avatar,
+  Divider,
+  Dialog
 } from "element-ui";
 
 Vue.use(Button);
 Vue.use(Input);
 Vue.use(Form);
+Vue.use(FormItem);
 Vue.use(Row);
 Vue.use(Col);
 Vue.use(Container);
@@ -35,3 +39,5 @@ Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Avatar);
+Vue.use(Divider);
+Vue.use(Dialog);
