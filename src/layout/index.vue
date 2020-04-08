@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <el-container>
-      <el-header>
+      <el-header height="65px">
         <navbar></navbar>
       </el-header>
       <el-main>
@@ -29,10 +29,9 @@ export default {
   height: 100%;
 }
 .el-header {
-  background-color: #b3c0d1;
+  padding: 0%;
 }
 .el-main {
-  background-color: #e9eef3;
   text-align: center;
   padding: 0px;
   margin: 0px;

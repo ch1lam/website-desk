@@ -19,7 +19,11 @@ import {
   DropdownItem,
   Avatar,
   Divider,
-  Dialog
+  Dialog,
+  Menu,
+  MenuItem,
+  Submenu,
+  MenuItemGroup,
 } from "element-ui";
 
 Vue.use(Button);
@@ -41,3 +45,7 @@ Vue.use(DropdownItem);
 Vue.use(Avatar);
 Vue.use(Divider);
 Vue.use(Dialog);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(MenuItemGroup);
