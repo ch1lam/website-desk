@@ -24,6 +24,8 @@ import {
   MenuItem,
   Submenu,
   MenuItemGroup,
+  Card,
+  Image,
 } from "element-ui";
 
 Vue.use(Button);
@@ -49,3 +51,5 @@ Vue.use(Menu);
 Vue.use(Submenu);
 Vue.use(MenuItem);
 Vue.use(MenuItemGroup);
+Vue.use(Card);
+Vue.use(Image);
