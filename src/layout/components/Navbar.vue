@@ -1,11 +1,8 @@
 <template>
   <div class="nvabar">
     <!-- 基本菜单栏 -->
-    <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">首页</el-menu-item>
-      <el-menu-item index="2">我的课程</el-menu-item>
-      <el-menu-item index="3">数据统计</el-menu-item>
-      <el-menu-item index="4">考试</el-menu-item>
+    <el-menu :default-active="this.$route.path" mode="horizontal" router @select="handleSelect">
+      <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">{{ item.navItem }}</el-menu-item>
 
       <div class="right-menu">
         <!-- <el-link type="primary">登陆</el-link>
@@ -33,7 +30,13 @@
 export default {
   data() {
     return {
-      activeIndex: "1"
+      navList: [
+        { name: "/", navItem: "首页" },
+        { name: "/", navItem: "我的课程" },
+        { name: "/", navItem: "数据统计" },
+        { name: "/", navItem: "考试" },
+        { name: "/upload", navItem: "上传资料" }
+      ]
     };
   },
   methods: {

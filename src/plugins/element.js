@@ -26,6 +26,7 @@ import {
   MenuItemGroup,
   Card,
   Image,
+  Message
 } from "element-ui";
 
 Vue.use(Button);
@@ -53,3 +54,6 @@ Vue.use(MenuItem);
 Vue.use(MenuItemGroup);
 Vue.use(Card);
 Vue.use(Image);
+
+
+Vue.prototype.$message = Message;

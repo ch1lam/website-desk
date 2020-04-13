@@ -35,7 +35,7 @@
         <el-form-item label="手机号码：" :label-width="formLabelWidth">
           <el-input v-model="resignInfo.phoneNum"></el-input>
         </el-form-item>
-        <el-form-item label="验证码：" :label-width="formLabelWidth">
+        <!-- <el-form-item label="验证码：" :label-width="formLabelWidth">
           <el-input v-model="resignInfo.code"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名：" :label-width="formLabelWidth">
@@ -43,11 +43,11 @@
         </el-form-item>
         <el-form-item label="身份证号：" :label-width="formLabelWidth">
           <el-input v-model="resignInfo.UID"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resignFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="resignFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="resign('resignInfo')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -55,6 +55,7 @@
 
 <script>
 import axios from "axios";
+import qs from "qs";
 
 export default {
   data() {
@@ -86,10 +87,10 @@ export default {
         username: "",
         password: "",
         verifyPassword: "",
-        phoneNum: "",
-        code: "",
-        realName: "",
-        UID: ""
+        phoneNum: ""
+        // code: "",
+        // realName: "",
+        // UID: ""
       },
       rules: {
         password: [{ validator: validatePassword, trigger: "blur" }],
@@ -101,17 +102,49 @@ export default {
   },
   methods: {
     login() {
-      axios
-        .get("http://localhost:8080/login", {
-          params: {
-            username: this.loginInfo.username,
-            password: this.loginInfo.password
-          }
-        })
-        .then(res => {
-          console.log(res.data);
-        })
-        .catch(error => console.log(error));
+      if (this.loginInfo.username === "" || this.loginInfo.password === "") {
+        this.$message({
+          showClose: true,
+          type: "error",
+          message: "用户名或密码不能为空",
+          center: true
+        });
+      } else {
+        axios
+          .post(
+            "http://localhost:9999/login",
+            qs.stringify({
+              username: this.loginInfo.username,
+              password: this.loginInfo.password
+            }),
+            {},
+            { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+          )
+          .then(res => {
+            console.log(res.data);
+            if (res.data.success === true) {
+              this.$router.push({ path: "/course" });
+            } else {
+              this.$message({
+                showClose: true,
+                type: "error",
+                message: "用户名或密码错误",
+                center: true
+              });
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    },
+
+    resign(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!");
+        }
+      });
     }
   }
 };
