@@ -2,7 +2,7 @@
   <div class="box">
     <el-card shadow="hover">
       <div class="img-container">
-        <el-image style="width: 100px; height: 100px" :fit="fit" :src="url" />
+        <el-image style="width: 100px; height: 100px" :fit="fill" :src="url" />
       </div>
 
       <div style="padding:14px">
@@ -13,7 +13,7 @@
       </div>
     </el-card>
     <el-card shadow="hover">
-      <img src="@/assets/mao.jpg" class="image" />
+      <img src="@/assets/mao.jpg" :fit="contain" class="image" />
       <span>《毛泽东理论概论》</span>
     </el-card>
     <el-card shadow="hover">
