@@ -31,6 +31,21 @@ const routes = [
         path: "upload",
         name: "Upload",
         component: () => import("@/views/upload/index.vue")
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: () => import("@/views/profile/index.vue")
+      },
+      {
+        path: "statistics",
+        name: "Statistics",
+        component: () => import("@/views/statistics/index.vue")
+      },
+      {
+        path: "exam",
+        name: "Exam",
+        component: () => import("@/views/exam/index.vue")
       }
     ]
   }
