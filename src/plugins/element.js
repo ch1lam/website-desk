@@ -26,7 +26,12 @@ import {
   MenuItemGroup,
   Card,
   Image,
-  Message
+  Message,
+  MessageBox,
+  Upload,
+  Tabs,
+  TabPane,
+  Radio,
 } from "element-ui";
 
 Vue.use(Button);
@@ -54,6 +59,13 @@ Vue.use(MenuItem);
 Vue.use(MenuItemGroup);
 Vue.use(Card);
 Vue.use(Image);
-
+Vue.use(Upload);
+Vue.use(Tabs);
+Vue.use(TabPane);
+Vue.use(Radio);
 
 Vue.prototype.$message = Message;
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$prompt = MessageBox.prompt;
