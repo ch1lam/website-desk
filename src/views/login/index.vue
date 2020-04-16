@@ -23,7 +23,7 @@
 
     <el-dialog title="账户注册" :visible.sync="resignFormVisible" center>
       <el-form :model="resignInfo" status-icon :rules="rules" ref="resignInfo">
-        <el-form-item label="用户名：" :label-width="formLabelWidth">
+        <el-form-item label="用户名：" :label-width="formLabelWidth" prop="name">
           <el-input v-model="resignInfo.name"></el-input>
         </el-form-item>
         <el-form-item label="设置密码：" :label-width="formLabelWidth" prop="password">
@@ -32,7 +32,7 @@
         <el-form-item label="确认密码：" :label-width="formLabelWidth" prop="verifyPassword">
           <el-input type="password" v-model="resignInfo.verifyPassword" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码：" :label-width="formLabelWidth">
+        <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phoneNum">
           <el-input v-model="resignInfo.phoneNum"></el-input>
         </el-form-item>
         <!-- <el-form-item label="验证码：" :label-width="formLabelWidth">
@@ -93,8 +93,24 @@ export default {
         // UID: ""
       },
       rules: {
-        password: [{ validator: validatePassword, trigger: "blur" }],
-        verifyPassword: [{ validator: validatePassword2, trigger: "blur" }]
+        name: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 4, max: 16, message: "长度在 4 到 16 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ],
+        verifyPassword: [
+          { required: true, validator: validatePassword2, trigger: "blur" }
+        ],
+        phoneNum: [
+          {
+            required: true,
+            message: "请输入电话号码",
+            trigger: "blur"
+          },
+          { min: 11, message: "请输入正确的手机号码", trigger: "blur" }
+        ]
       },
       resignFormVisible: false,
       formLabelWidth: "150px"
@@ -112,12 +128,11 @@ export default {
       } else {
         axios
           .post(
-            "http://localhost:9999/login",
+            "http://192.168.0.111:9999/login",
             qs.stringify({
               username: this.loginInfo.username,
               password: this.loginInfo.password
             }),
-            {},
             { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
           )
           .then(res => {
@@ -140,7 +155,36 @@ export default {
     resign(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          axios
+            .post(
+              "http://localhost:9999/resign",
+              qs.stringify({
+                username: this.resignInfo.name,
+                password: this.resignInfo.password,
+                phoneNum: this.resignInfo.phoneNum
+              }),
+              {
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+              }
+            )
+            .then(res => {
+              if (res.data.success === true) {
+                this.resignFormVisible = false;
+                this.$message({
+                  showClose: true,
+                  type: "success",
+                  message: res.data.message,
+                  center: true
+                });
+              } else {
+                this.$message({
+                  showClose: true,
+                  type: "error",
+                  message: res.data.message,
+                  center: true
+                });
+              }
+            });
         } else {
           console.log("error submit!");
         }
