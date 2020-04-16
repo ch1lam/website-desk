@@ -9,16 +9,16 @@
         <el-link>注册</el-link>-->
 
         <!-- 右上角用户图标 -->
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <div class="avatar-wrapper">
-            <el-avatar>user</el-avatar>
+            <el-avatar :src="src">user</el-avatar>
             <i class="el-icon-caret-bottom" />
           </div>
 
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>切换账户</el-dropdown-item>
-            <el-dropdown-item>注销</el-dropdown-item>
+            <el-dropdown-item command="a">个人信息</el-dropdown-item>
+            <el-dropdown-item command="b">修改密码</el-dropdown-item>
+            <el-dropdown-item command="c">注销</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -32,16 +32,25 @@ export default {
     return {
       navList: [
         { name: "/", navItem: "首页" },
-        { name: "/", navItem: "我的课程" },
-        { name: "/", navItem: "数据统计" },
-        { name: "/", navItem: "考试" },
+        { name: "/dashboard", navItem: "首页" },
+        { name: "/course", navItem: "我的课程" },
+        { name: "/statistics", navItem: "数据统计" },
+        { name: "/exam", navItem: "考试" },
         { name: "/upload", navItem: "上传资料" }
-      ]
+      ],
+      src:"https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
     };
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    handleCommand(command) {
+      if (command === "a") {
+        this.$router.push("/profile");
+      } else {
+        console.log(command);
+      }
     }
   }
 };
