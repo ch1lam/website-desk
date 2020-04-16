@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       navList: [
-        { name: "/", navItem: "首页" },
         { name: "/dashboard", navItem: "首页" },
         { name: "/course", navItem: "我的课程" },
         { name: "/statistics", navItem: "数据统计" },
