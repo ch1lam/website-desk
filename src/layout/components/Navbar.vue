@@ -17,8 +17,7 @@
 
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="a">个人信息</el-dropdown-item>
-            <el-dropdown-item command="b">修改密码</el-dropdown-item>
-            <el-dropdown-item command="c">注销</el-dropdown-item>
+            <el-dropdown-item command="b">注销</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -35,9 +34,10 @@ export default {
         { name: "/course", navItem: "我的课程" },
         { name: "/statistics", navItem: "数据统计" },
         { name: "/exam", navItem: "考试" },
-        { name: "/upload", navItem: "上传资料" }
+        { name: "/resource", navItem: "课程资源" }
       ],
-      src:"https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
+      src:
+        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
     };
   },
   methods: {
@@ -47,8 +47,20 @@ export default {
     handleCommand(command) {
       if (command === "a") {
         this.$router.push("/profile");
+      } else if (command === "b") {
+        this.$store.dispatch("setUsername", null);
+        this.$store.dispatch("setToken", null);
+        window.sessionStorage.removeItem("username");
+        window.sessionStorage.removeItem("token");
+        this.$router.push({ path: "/" });
+        this.$message({
+          showClose: true,
+          type: "success",
+          message: "注销成功",
+          center: true
+        });
       } else {
-        console.log(command);
+        console.log("注销失败");
       }
     }
   }
