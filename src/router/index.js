@@ -28,9 +28,9 @@ const routes = [
         component: () => import("@/views/course/index.vue")
       },
       {
-        path: "upload",
-        name: "Upload",
-        component: () => import("@/views/upload/index.vue")
+        path: "resource",
+        name: "Resource",
+        component: () => import("@/views/resource/index.vue")
       },
       {
         path: "profile",
