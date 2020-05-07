@@ -32,6 +32,8 @@ import {
   Tabs,
   TabPane,
   Radio,
+  Table,
+  TableColumn,
 } from "element-ui";
 
 Vue.use(Button);
@@ -63,6 +65,8 @@ Vue.use(Upload);
 Vue.use(Tabs);
 Vue.use(TabPane);
 Vue.use(Radio);
+Vue.use(Table);
+Vue.use(TableColumn);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;
