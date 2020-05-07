@@ -16,7 +16,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="login">登录</el-button>
-        <el-divider>or</el-divider>
+        <el-divider></el-divider>
         <el-button type="text" @click="resignFormVisible = true">注册</el-button>
       </el-form-item>
     </el-form>
@@ -128,7 +128,7 @@ export default {
       } else {
         axios
           .post(
-            "http://192.168.0.111:9999/login",
+            "http://localhost:9999/login",
             qs.stringify({
               username: this.loginInfo.username,
               password: this.loginInfo.password
@@ -138,6 +138,10 @@ export default {
           .then(res => {
             console.log(res.data);
             if (res.data.success === true) {
+              // 存用户名
+              this.$store.dispatch("setUsername", this.loginInfo.username);
+              // 存token
+              this.$store.dispatch("setToken", res.data.data.token);
               this.$router.push({ path: "/course" });
             } else {
               this.$message({
@@ -202,14 +206,22 @@ export default {
   margin: 0px auto 40px auto;
   text-align: center;
 }
+
+.login-form-container {
+  height: 100%;
+
+}
+
 .login-form-container > .el-form {
   position: relative;
-  width: 520px;
+  width: 420px;
+    top: 20%;
   max-width: 100%;
-  padding: 160px 35px 0;
-  margin-top: 300px;
-  margin: 0 auto;
+  padding: 35px 35px 0;
+  margin: auto;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
 }
 .el-form-item {
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -233,6 +245,7 @@ export default {
 .el-divider >>> .el-divider__text {
   height: 10px;
   line-height: 10px;
+  background: rgba(255, 255, 255, 0.7);
 }
 .el-dialog__wrapper >>> .el-dialog {
   border-radius: 15px;
