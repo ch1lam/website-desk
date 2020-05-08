@@ -7,7 +7,6 @@
       <div class="right-menu">
         <!-- <el-link type="primary">登陆</el-link>
         <el-link>注册</el-link>-->
-
         <!-- 右上角用户图标 -->
         <el-dropdown @command="handleCommand">
           <div class="avatar-wrapper">
@@ -36,9 +35,16 @@ export default {
         { name: "/exam", navItem: "考试" },
         { name: "/resource", navItem: "课程资源" }
       ],
-      src:
-        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
+      src: this.$store.state.avatarUrl
     };
+  },
+  mounted: function() {
+    this.getAvatar();
+  },
+  watch: {
+    "this.$store.state.avatarUrl": function() {
+      this.src = this.$store.state.avatarUrl;
+    }
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -50,8 +56,10 @@ export default {
       } else if (command === "b") {
         this.$store.dispatch("setUsername", null);
         this.$store.dispatch("setToken", null);
+        this.$store.dispatch("setAvatarUrl", null);
         window.sessionStorage.removeItem("username");
         window.sessionStorage.removeItem("token");
+        window.sessionStorage.removeItem("avatarUrl");
         this.$router.push({ path: "/" });
         this.$message({
           showClose: true,
@@ -62,7 +70,7 @@ export default {
       } else {
         console.log("注销失败");
       }
-    }
+    },
   }
 };
 </script>
