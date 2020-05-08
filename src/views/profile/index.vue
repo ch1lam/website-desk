@@ -5,9 +5,13 @@
       <el-col :span="9">
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://localhost:9999/student/uploadAvatar"
+          accept="image/jpeg, image/jpg, image/png"
+          :headers="uploadHeader"
+          :data="uploadData"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload"
         >
           <el-image v-if="imageUrl" :src="imageUrl" class="avatar" fit="fill">
@@ -54,31 +58,18 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="修改密码">
-            <div class="pane-wrapper">
-              <el-col :span="8">
-                <span style="line-height:40px">请输入当前密码：</span>
-              </el-col>
-              <el-col :span="15">
-                <el-input></el-input>
-              </el-col>
-            </div>
-            <div class="pane-wrapper">
-              <el-col :span="8">
-                <span style="line-height:40px">请输入新的密码：</span>
-              </el-col>
-              <el-col :span="15">
-                <el-input></el-input>
-              </el-col>
-            </div>
-            <div class="pane-wrapper">
-              <el-col :span="8">
-                <span style="line-height:40px">再次输入新密码：</span>
-              </el-col>
-              <el-col :span="15">
-                <el-input></el-input>
-              </el-col>
-            </div>
-            <el-button>提交修改</el-button>
+            <el-form :model="putPassword" ref="putPassword" :rules="rules">
+              <el-form-item label="请输入当前密码" prop="oldPassword">
+                <el-input type="password" v-model="putPassword.oldPassword" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="请输入新的密码" prop="newPassword">
+                <el-input type="password" v-model="putPassword.newPassword" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="再次输入新密码" prop="newPassword2">
+                <el-input type="password" v-model="putPassword.newPassword2" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+            <el-button @click="commitPassword('putPassword')">提交修改</el-button>
           </el-tab-pane>
           <el-tab-pane label="实名认证" name="实名认证">
             <div class="pane-wrapper">
@@ -102,19 +93,56 @@ import qs from "qs";
 
 export default {
   data() {
+    var validatePassword = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.putPassword.newPassword2 !== "") {
+          this.$refs.putPassword.validateField("newPassword2");
+        }
+        callback();
+      }
+    };
+    var validatePassword2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.putPassword.newPassword) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
+      uploadHeader: { token: this.$store.state.token },
+      uploadData: { username: this.$store.state.username },
       activeName: "用户信息",
       imageUrl:
-        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
-      // "",
+        "http://localhost:9999/student/getAvatar?username=" +
+        this.$store.state.username,
       userInfo: {
-        username: "默认名字",
+        username: "null",
         gender: "男",
-        realName: "默认真实姓名",
-        idCard: "默认身份证",
-        phoneNum: "默认手机号",
-        schoolName: "默认学校名",
-        role: "默认身份"
+        realName: "null",
+        idCard: "null",
+        phoneNum: "null",
+        schoolName: "null",
+        role: "null"
+      },
+      putPassword: {
+        oldPassword: "",
+        newPassword: "",
+        newPassword2: ""
+      },
+      rules: {
+        oldPassword: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ],
+        newPassword: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ],
+        newPassword2: [
+          { required: true, validator: validatePassword2, trigger: "blur" }
+        ]
       }
     };
   },
@@ -127,18 +155,33 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      this.$store.dispatch(
+        "setAvatarUrl",
+        "http://localhost:9999/student/getAvatar?username=" +
+          this.$store.state.username
+      );
+    },
+    handleAvatarError(err) {
+      console.log(err);
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
+      const isPNG = file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+      if (!isJPG && !isPNG) {
+        this.$message.error("上传头像图片只能是 JPG 或 PNG 格式!");
+        return isJPG && isPNG;
       }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
+        return isLt2M;
       }
-      return isJPG && isLt2M;
+    },
+    getAvatar() {
+      this.imageUrl =
+        "http://localhost:9999/student/getAvatar?username=" +
+        this.$store.state.username;
     },
     getUserInfo() {
       this.userInfo.username = this.$store.state.username;
@@ -155,7 +198,6 @@ export default {
         )
         .then(res => {
           if (res.data.success === true) {
-            console.log(res.data.data);
             if (res.data.data.userInfo.gender === 0) {
               this.userInfo.gender = "男";
             } else if (res.data.data.userInfo.gender === 1) {
@@ -168,6 +210,49 @@ export default {
             this.userInfo.role = res.data.data.userInfo.role;
           }
         });
+    },
+    commitPassword(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          axios
+            .post(
+              "http://localhost:9999/student/putPassword",
+              qs.stringify({
+                username: this.userInfo.username,
+                password: this.putPassword.oldPassword,
+                newPassword: this.putPassword.newPassword
+              }),
+              {
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  token: this.$store.state.token
+                }
+              }
+            )
+            .then(res => {
+              if (res.data.success === true) {
+                this.$store.dispatch("setUsername", null);
+                this.$store.dispatch("setToken", null);
+                window.sessionStorage.removeItem("username");
+                window.sessionStorage.removeItem("token");
+                this.$router.push({ path: "/" });
+                this.$message({
+                  showClose: true,
+                  type: "success",
+                  message: res.data.data.message,
+                  center: true
+                });
+              } else {
+                this.$message({
+                  showClose: true,
+                  type: "error",
+                  message: res.data.data.message,
+                  center: true
+                });
+              }
+            });
+        }
+      });
     }
   }
 };
