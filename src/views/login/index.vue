@@ -142,6 +142,8 @@ export default {
               this.$store.dispatch("setUsername", this.loginInfo.username);
               // 存token
               this.$store.dispatch("setToken", res.data.data.token);
+              // 存头像url
+              this.$store.dispatch("setAvatarUrl", res.data.data.avatarUrl);
               this.$router.push({ path: "/course" });
             } else {
               this.$message({
