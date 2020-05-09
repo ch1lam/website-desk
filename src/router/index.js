@@ -13,12 +13,12 @@ const routes = [
   },
   {
     path: "/",
-    name: "首页",
+    name: "白板",
     component: layout,
-    redirect: "/dashboard",
+    // redirect: "/dashboard",
     children: [
       {
-        path: "dashboard",
+        path: "dashboard/:id",
         name: "Dashboard",
         component: () => import("@/views/dashboard/index.vue")
       },

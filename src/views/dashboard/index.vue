@@ -22,13 +22,16 @@ export default {
   data() {
     return {
       videoOptions: {
-        autoplay: true,
+        autoplay: false,
+        height: 600,
+        width: 800,
         controls: true,
+        preload: "auto",
         loop: true,
         sources: [
           {
             // src: "https://v-cdn.zjol.com.cn/280443.mp4",
-            src: "http://127.0.0.1:9999/guest/video",
+            src: "/api/guest/video",
             type: "video/mp4"
           }
         ]

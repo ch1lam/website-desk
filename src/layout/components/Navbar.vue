@@ -29,22 +29,17 @@ export default {
   data() {
     return {
       navList: [
-        { name: "/dashboard", navItem: "首页" },
+        // { name: "/dashboard", navItem: "首页" },
         { name: "/course", navItem: "我的课程" },
         { name: "/statistics", navItem: "数据统计" },
         { name: "/exam", navItem: "考试" },
         { name: "/resource", navItem: "课程资源" }
       ],
-      src: this.$store.state.avatarUrl
+      src: ""
     };
   },
   mounted: function() {
     this.getAvatar();
-  },
-  watch: {
-    "this.$store.state.avatarUrl": function() {
-      this.src = this.$store.state.avatarUrl;
-    }
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -71,6 +66,11 @@ export default {
         console.log("注销失败");
       }
     },
+    getAvatar() {
+      this.src =
+        "/api/student/getAvatar?username=" +
+        this.$store.state.username;
+    }
   }
 };
 </script>

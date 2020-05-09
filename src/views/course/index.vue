@@ -2,27 +2,21 @@
   <el-row class="box">
     <el-col :span="4"></el-col>
     <el-col :span="16" class="board">
-      <el-card shadow="hover" @click.native="test" v-for="course in courses" :key="course.id">
+      <el-card shadow="hover" @click.native="test(course)" v-for="course in courses" :key="course.id">
         <div class="img-container">
-          <el-image style="width: 100px; height: 100px" :src="url" fit="cover" />
+          <el-image
+            style="width: 100%; height: 150px"
+            :src="'/api/student/getPoster?id='+course.id"
+            fit="cover"
+          />
         </div>
 
         <div style="padding:14px">
-          <span>《{{ course.courseName }}》</span>
+          <span>《{{ course.name }}》</span>
           <div class="bottom">
-            <span>主讲人:xxxx</span>
+            <span>主讲人：{{ course.teacherName }}</span>
           </div>
         </div>
-      </el-card>
-      <el-card shadow="hover">
-        <div>
-          <img src="@/assets/mao.jpg" class="image" style="width:100%" />
-        </div>
-
-        <span>《毛泽东理论概论》</span>
-      </el-card>
-      <el-card shadow="hover">
-        <span>《近代史纲要》</span>
       </el-card>
     </el-col>
     <el-col :span="4"></el-col>
@@ -35,21 +29,30 @@ import axios from "axios";
 export default {
   data() {
     return {
-      url:
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-      courses: {
-        id: "",
-        courseName: ""
-      }
+      courses: []
     };
   },
-  mounted: {},
+  mounted: function() {
+    this.getAllCourseInfo();
+  },
+  computed: {},
   methods: {
-    test() {
-      this.$router.push({ path: "/dashboard/${id}" });
+    test(course) {
+      this.$router.push({ path: `/dashboard/${course.id}` });
     },
     getAllCourseInfo() {
-      axios.post("http://localhost:9999/student/getUserInfo");
+      axios({
+        method: "post",
+        url: "/api/student/getAllCourseInfo",
+        headers: {
+          Token: this.$store.state.token
+        }
+      }).then(res => {
+        this.courses = res.data.data.CourseInfo;
+      });
+    },
+    getPoster(courseurl) {
+      courseurl;
     }
   }
 };
@@ -67,7 +70,7 @@ export default {
 }
 .el-card {
   margin: 20px;
-  height: 240px;
+  height: 270px;
   width: 240px;
 }
 /* .image {

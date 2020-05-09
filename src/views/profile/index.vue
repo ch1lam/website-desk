@@ -5,7 +5,7 @@
       <el-col :span="9">
         <el-upload
           class="avatar-uploader"
-          action="http://localhost:9999/student/uploadAvatar"
+          action="/api/student/uploadAvatar"
           accept="image/jpeg, image/jpg, image/png"
           :headers="uploadHeader"
           :data="uploadData"
@@ -117,7 +117,7 @@ export default {
       uploadData: { username: this.$store.state.username },
       activeName: "用户信息",
       imageUrl:
-        "http://localhost:9999/student/getAvatar?username=" +
+        "/api/student/getAvatar?username=" +
         this.$store.state.username,
       userInfo: {
         username: "null",
@@ -157,7 +157,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw);
       this.$store.dispatch(
         "setAvatarUrl",
-        "http://localhost:9999/student/getAvatar?username=" +
+        "/api/student/getAvatar?username=" +
           this.$store.state.username
       );
     },
@@ -180,19 +180,19 @@ export default {
     },
     getAvatar() {
       this.imageUrl =
-        "http://localhost:9999/student/getAvatar?username=" +
+        "/api/student/getAvatar?username=" +
         this.$store.state.username;
     },
     getUserInfo() {
       this.userInfo.username = this.$store.state.username;
       axios
         .post(
-          "http://localhost:9999/student/getUserInfo",
+          "/api/student/getUserInfo",
           qs.stringify({ username: this.userInfo.username }),
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              token: this.$store.state.token
+              Token: this.$store.state.token
             }
           }
         )
@@ -216,7 +216,7 @@ export default {
         if (valid) {
           axios
             .post(
-              "http://localhost:9999/student/putPassword",
+              "/api/student/putPassword",
               qs.stringify({
                 username: this.userInfo.username,
                 password: this.putPassword.oldPassword,

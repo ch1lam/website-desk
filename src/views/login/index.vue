@@ -128,7 +128,7 @@ export default {
       } else {
         axios
           .post(
-            "http://localhost:9999/login",
+            "/api/login",
             qs.stringify({
               username: this.loginInfo.username,
               password: this.loginInfo.password
@@ -163,7 +163,7 @@ export default {
         if (valid) {
           axios
             .post(
-              "http://localhost:9999/resign",
+              "/api/resign",
               qs.stringify({
                 username: this.resignInfo.name,
                 password: this.resignInfo.password,

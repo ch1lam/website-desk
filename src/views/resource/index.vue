@@ -33,7 +33,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      UploadUrl: "http://localhost:9999/guest/uploadVideo",
+      UploadUrl: "/api/guest/uploadVideo",
       fileList: [],
       tableData: [
         {

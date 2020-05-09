@@ -9,8 +9,24 @@ module.exports = {
   lintOnSave: true,
   // 是否为生产环境构建生成 source map？
   productionSourceMap: false,
-  chainWebpack: config => {
+  devServer: {
+    open: true,
+    // host: "localhost",
+    // port: "8800", // 前端服务端口
+    proxy: {
+      '/api': {
+        target: "http://localhost:9999", // 后端url
+        changeOrigin: true, // 允许跨域
+        pathRewrite: {
+          "^/api": "",
+        },
+      },
+    },
+  },
+  chainWebpack: (config) => {
     // alias 配置
     config.resolve.alias.set("@", resolve("src"));
-  }
+    // 热启动
+    config.resolve.symlinks(true);
+  },
 };
