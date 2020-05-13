@@ -1,33 +1,19 @@
 <template>
-  <el-menu
-    :default-active="activeIndex"
-    mode="vertical"
-    @select="handleSelect"
-  >
-    <el-submenu index="1">
-      <template slot="title">
-        <span>第一章节</span>
-      </template>
-      <el-menu-item index="1-1">第一课</el-menu-item>
-      <el-menu-item index="1-2">第二课</el-menu-item>
-      <el-menu-item index="1-3">第三课</el-menu-item>
-    </el-submenu>
-    <el-menu-item index="2">第二章节</el-menu-item>
-    <el-menu-item index="3">第三章节</el-menu-item>
-  </el-menu>
+    <el-menu mode="vertical">
+      <chapter-item v-for="chapter in chapters" :key="chapter.id" :item="chapter" />
+    </el-menu>
 </template>
 
 <script>
+import ChapterItem from "./ChapterItem";
+
 export default {
   name: "VideoList",
-  data() {
-    return {
-      activeIndex: "1"
-    };
-  },
-  methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+  components: { ChapterItem },
+  props: {
+    chapters: {
+      type: Array,
+      required: true
     }
   }
 };
@@ -36,6 +22,8 @@ export default {
 <style scoped>
 .el-menu {
   height: 100%;
+
+  text-align: left;
 }
 .el-menu-item {
   height: 30px;

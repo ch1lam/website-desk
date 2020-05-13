@@ -29,11 +29,10 @@ export default {
   data() {
     return {
       navList: [
-        // { name: "/dashboard", navItem: "首页" },
         { name: "/course", navItem: "我的课程" },
         { name: "/statistics", navItem: "数据统计" },
-        { name: "/exam", navItem: "考试" },
-        { name: "/resource", navItem: "课程资源" }
+        { name: "/resource", navItem: "课程资源" },
+        { name: "/courseManager", navItem: "课程管理" }
       ],
       src: ""
     };
@@ -68,8 +67,7 @@ export default {
     },
     getAvatar() {
       this.src =
-        "/api/student/getAvatar?username=" +
-        this.$store.state.username;
+        "/api/student/getAvatar?username=" + this.$store.state.username;
     }
   }
 };

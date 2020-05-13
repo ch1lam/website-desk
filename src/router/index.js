@@ -9,7 +9,7 @@ const routes = [
   {
     path: "/",
     name: "登陆",
-    component: () => import("@/views/login/index.vue")
+    component: () => import("@/views/login/index.vue"),
   },
   {
     path: "/",
@@ -20,39 +20,44 @@ const routes = [
       {
         path: "dashboard/:id",
         name: "Dashboard",
-        component: () => import("@/views/dashboard/index.vue")
+        component: () => import("@/views/dashboard/index.vue"),
       },
       {
         path: "course",
         name: "Course",
-        component: () => import("@/views/course/index.vue")
+        component: () => import("@/views/course/index.vue"),
       },
       {
         path: "resource",
         name: "Resource",
-        component: () => import("@/views/resource/index.vue")
+        component: () => import("@/views/resource/index.vue"),
       },
       {
         path: "profile",
         name: "Profile",
-        component: () => import("@/views/profile/index.vue")
+        component: () => import("@/views/profile/index.vue"),
       },
       {
         path: "statistics",
         name: "Statistics",
-        component: () => import("@/views/statistics/index.vue")
+        component: () => import("@/views/statistics/index.vue"),
       },
       {
-        path: "exam",
-        name: "Exam",
-        component: () => import("@/views/exam/index.vue")
-      }
-    ]
-  }
+        path: "courseManager",
+        name: "CourseManager",
+        component: () => import("@/views/courseManager/index.vue"),
+      },
+      {
+        path: "chapterManager/:id",
+        name: "ChapterManager",
+        component: () => import("@/views/chapterManager/index.vue"),
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 export default router;

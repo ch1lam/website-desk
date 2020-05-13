@@ -34,6 +34,14 @@ import {
   Radio,
   Table,
   TableColumn,
+  Tag,
+  Popconfirm,
+  Popover,
+  PageHeader,
+  Breadcrumb,
+  Tree,
+  Alert,
+  Switch
 } from "element-ui";
 
 Vue.use(Button);
@@ -67,6 +75,14 @@ Vue.use(TabPane);
 Vue.use(Radio);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.use(Tag);
+Vue.use(Popconfirm);
+Vue.use(Popover);
+Vue.use(PageHeader);
+Vue.use(Breadcrumb);
+Vue.use(Tree);
+Vue.use(Alert);
+Vue.use(Switch);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;

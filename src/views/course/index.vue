@@ -65,17 +65,17 @@ export default {
 }
 .board {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   background: rgba(255, 255, 255, 0.75);
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 .el-card {
   margin: 20px;
+  margin-bottom: 0px;
   height: 270px;
   width: 240px;
 }
-/* .image {
-  object-fit: none;
-} */
 .el-card >>> .el-card__body {
   padding: 0%;
 }

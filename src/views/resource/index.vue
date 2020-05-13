@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-upload
-      class="upload-demo"
       :action="UploadUrl"
       :on-preview="handlePreview"
       :on-success="handleSuccess"

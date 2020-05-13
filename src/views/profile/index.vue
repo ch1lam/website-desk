@@ -20,7 +20,6 @@
             </div>
           </el-image>
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar" /> -->
         </el-upload>
 
         <!-- <el-image :src="src" class="avatar" :fit="fill">
@@ -116,9 +115,7 @@ export default {
       uploadHeader: { token: this.$store.state.token },
       uploadData: { username: this.$store.state.username },
       activeName: "用户信息",
-      imageUrl:
-        "/api/student/getAvatar?username=" +
-        this.$store.state.username,
+      imageUrl: "/api/student/getAvatar?username=" + this.$store.state.username,
       userInfo: {
         username: "null",
         gender: "男",
@@ -157,8 +154,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw);
       this.$store.dispatch(
         "setAvatarUrl",
-        "/api/student/getAvatar?username=" +
-          this.$store.state.username
+        "/api/student/getAvatar?username=" + this.$store.state.username
       );
     },
     handleAvatarError(err) {
@@ -180,8 +176,7 @@ export default {
     },
     getAvatar() {
       this.imageUrl =
-        "/api/student/getAvatar?username=" +
-        this.$store.state.username;
+        "/api/student/getAvatar?username=" + this.$store.state.username;
     },
     getUserInfo() {
       this.userInfo.username = this.$store.state.username;
