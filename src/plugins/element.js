@@ -41,7 +41,8 @@ import {
   Breadcrumb,
   Tree,
   Alert,
-  Switch
+  Switch,
+  Progress
 } from "element-ui";
 
 Vue.use(Button);
@@ -83,6 +84,8 @@ Vue.use(Breadcrumb);
 Vue.use(Tree);
 Vue.use(Alert);
 Vue.use(Switch);
+Vue.use(Progress);
+
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;
