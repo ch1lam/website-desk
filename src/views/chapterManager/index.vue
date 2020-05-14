@@ -26,13 +26,13 @@
                 size="mini"
                 @click="() => append(node)"
               >添加小节</el-button>
-              <el-popover placement="top" width="160" :ref="'popover-' + data.id">
+              <el-popover placement="top" width="160" :ref="'popover-'+data.id">
                 <p>确定删除吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="pCancel(data.id)">取消</el-button>
                   <el-button type="primary" size="mini" @click="deleteSubmit(data)">确定</el-button>
                 </div>
-                <el-button type="text" size="mini" slot="reference" @click="pOpen(scope.row.id)">删除</el-button>
+                <el-button type="text" size="mini" slot="reference" @click="pOpen(data.id)">删除</el-button>
               </el-popover>
             </span>
           </span>
@@ -70,9 +70,9 @@
             <el-input :disabled="true" v-model="detailForm.countChild" />
           </el-form-item>
           <el-form-item label="叶子章节：">
-            <el-switch v-model="videoVisible" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch v-model="uploadVisble" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
           </el-form-item>
-          <el-form-item label="视频上传：" v-if="videoVisible===true">
+          <el-form-item label="视频上传：" v-if="uploadVisble===true">
             <el-upload
               class="upload-wrapper"
               action="/api/teacher/uploadVideo"
@@ -80,8 +80,8 @@
               :headers="uploadHeader"
               :data="uploadVideoData"
               :show-file-list="false"
-              :on-success="uploadSuccess"
-              :on-progress="uploading"
+              :on-success="videoUploadSuccess"
+              :on-progress="videoUploading"
               :limit="1"
             >
               <el-button class="uploadButton" type="primary">选择视频...</el-button>
@@ -93,6 +93,35 @@
                   show-icon
                 ></el-alert>
               </div>
+            </el-upload>
+            <el-progress
+              v-if="videoFlag == true"
+              type="line"
+              :percentage="videoUploadPercent"
+              style="margin-top: 30px;"
+            ></el-progress>
+          </el-form-item>
+          <el-form-item label="文件上传：" v-if="uploadVisble===true">
+            <el-upload
+              class="upload-wrapper"
+              action="/api/teacher/uploadFile"
+              :headers="uploadHeader"
+              :data="uploadVideoData"
+              :show-file-list="false"
+              :before-upload="beforeUploadFile"
+              :on-progress="fileuploading"
+              :on-success="fileUploadSuccess"
+            >
+              <el-button class="uploadButton" type="primary">选择文件...</el-button>
+              <div slot="tip" class="el-upload__tip">
+                <el-alert title="务必保证在叶子章节才上传课件; 课件格式不限" type="info" :closable="false" show-icon></el-alert>
+              </div>
+              <el-progress
+                v-if="progressFlag == true"
+                type="line"
+                :percentage="fileUploadPercent"
+                style="margin-top: 30px;"
+              ></el-progress>
             </el-upload>
           </el-form-item>
           <el-form-item>
@@ -129,9 +158,13 @@ import qs from "qs";
 export default {
   data() {
     return {
+      videoFlag: false,
+      videoUploadPercent: 0,
+      progressFlag: false,
+      fileUploadPercent: 0,
       uploadVideoData: { id: "" },
       addFormVisible: false,
-      videoVisible: false,
+      uploadVisble: false,
       imageUrl: "/api/student/getPoster?id=" + this.$route.params.id,
       uploadHeader: { Token: this.$store.state.token },
       uploadData: { courseId: this.$route.params.id },
@@ -140,7 +173,7 @@ export default {
         id: "id",
         sequence: "sequence",
         children: "children",
-        videoId:"videoId",
+        videoId: "videoId",
         label: data => {
           return data.sequence + ". " + data.label;
         }
@@ -168,7 +201,6 @@ export default {
       this.detailForm.sequence = data.sequence;
       this.detailForm.countChild = data.children.length;
       this.uploadVideoData.id = data.id;
-      // this.detailForm.countChild = node.parent.data.label;
     },
     goBack() {
       this.$router.push("/courseManager");
@@ -259,6 +291,7 @@ export default {
     },
 
     deleteSubmit(data) {
+      console.log(data);
       axios
         .post(
           "/api/teacher/deleteChapter",
@@ -327,30 +360,71 @@ export default {
           this.getAllChapter();
         });
     },
-    uploadSuccess() {
-      this.$message({
-        showClose: true,
-        type: "success",
-        message: "上传成功",
-        center: true
-      });
+    //上传前的函数(用于验证上传文件格式及大小)
+    beforeUploadFile(file) {
+      const isLt100M = file.size / 1024 / 1024 < 100;
+      if (!isLt100M) {
+        return false;
+      }
     },
-    uploading() {
-      this.message({
-        showClose: true,
-        type: "info",
-        message: "上传中",
-        center: true
-      });
+    videoUploadSuccess(res, file, fileList) {
+      file.videoFlag = false;
+      this.videoUploadPercent = 0;
+      if (file.status == "success") {
+        this.$message({
+          showClose: true,
+          type: "success",
+          message: "上传成功",
+          center: true
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          type: "error",
+          message: "上传失败",
+          center: true
+        });
+      }
+    },
+    fileUploadSuccess(res, file, fileList) {
+      console.log(file);
+      file.progressFlag = false;
+      this.fileUploadPercent = 0;
+      if (file.status == "success") {
+        this.$message({
+          showClose: true,
+          type: "success",
+          message: "上传成功",
+          center: true
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          type: "error",
+          message: "上传失败",
+          center: true
+        });
+      }
+    },
+    videoUploading(event, file, fileList) {
+      this.videoFlag = true;
+      this.videoUploadPercent = Math.abs(file.percentage.toFixed(0));
+    },
+    fileuploading(event, file, fileList) {
+      this.progressFlag = true;
+      this.fileUploadPercent = Math.abs(file.percentage.toFixed(0));
     },
     pCancel(id) {
       this.pClose(id);
+      console.log(id);
     },
     pClose(id) {
       this.$refs[`popover-` + id].doClose();
     },
     pOpen(id) {
-      this.$refs[`popover-` + id].doShow();
+      console.log(this.$refs);
+      console.log(this.$refs[`popover-` + id]);
+      this.$refs[`popover-` + id][0].doShow();
     }
   }
 };
