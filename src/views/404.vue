@@ -1,7 +1,5 @@
 <template>
-  <div>
-      <span>数据统计</span>
-  </div>
+  <span>404</span>
 </template>
 
 <script>

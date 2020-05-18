@@ -42,7 +42,11 @@ import {
   Tree,
   Alert,
   Switch,
-  Progress
+  Progress,
+  Select,
+  Option,
+  OptionGroup,
+  Pagination
 } from "element-ui";
 
 Vue.use(Button);
@@ -85,7 +89,10 @@ Vue.use(Tree);
 Vue.use(Alert);
 Vue.use(Switch);
 Vue.use(Progress);
-
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(OptionGroup);
+Vue.use(Pagination);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;

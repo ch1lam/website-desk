@@ -7,6 +7,7 @@ const state = {
   username: window.sessionStorage.getItem("username"),
   token: window.sessionStorage.getItem("token"),
   avatarUrl: window.sessionStorage.getItem("avatarUrl"),
+  role:window.sessionStorage.getItem("role"),
 };
 
 // 实时监听 state 值的变化(最新状态)
@@ -19,6 +20,9 @@ const getters = {
   },
   getAvatarUrl() {
     return state.avatarUrl;
+  },
+  getRole() {
+    return state.role;
   },
 };
 
@@ -38,6 +42,10 @@ const mutations = {
     state.avatarUrl = newAvatarUrl;
     window.sessionStorage.setItem("avatarUrl", newAvatarUrl);
   },
+  setRole(state, newRole) {
+    state.role = newRole;
+    window.sessionStorage.setItem("role", newRole);
+  }
 };
 
 // 自定义触发 mutations 里函数的方法， context 与 store 实例具有相同方法和属性
@@ -52,7 +60,12 @@ const actions = {
   setAvatarUrl(context, avatarUrl) {
     context.commit("setAvatarUrl", avatarUrl);
   },
+  setRole(context, role) {
+    context.commit("setRole", role);
+  }
 };
+
+
 
 const store = new Vuex.Store({
   state,

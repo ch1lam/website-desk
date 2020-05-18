@@ -35,15 +35,12 @@
         <el-form-item label="手机号码：" :label-width="formLabelWidth" prop="phoneNum">
           <el-input v-model="resignInfo.phoneNum"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="验证码：" :label-width="formLabelWidth">
-          <el-input v-model="resignInfo.code"></el-input>
-        </el-form-item>
-        <el-form-item label="真实姓名：" :label-width="formLabelWidth">
+        <el-form-item label="真实姓名：" :label-width="formLabelWidth" prop="realName">
           <el-input v-model="resignInfo.realName"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号：" :label-width="formLabelWidth">
-          <el-input v-model="resignInfo.UID"></el-input>
-        </el-form-item>-->
+        <el-form-item label="身份证号：" :label-width="formLabelWidth" prop="idCard">
+          <el-input v-model="resignInfo.idCard"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resignFormVisible = false">取 消</el-button>
@@ -87,10 +84,9 @@ export default {
         username: "",
         password: "",
         verifyPassword: "",
-        phoneNum: ""
-        // code: "",
-        // realName: "",
-        // UID: ""
+        phoneNum: "",
+        realName: "",
+        idCard: ""
       },
       rules: {
         name: [
@@ -106,10 +102,26 @@ export default {
         phoneNum: [
           {
             required: true,
-            message: "请输入电话号码",
+            message: "请输入手机号码",
             trigger: "blur"
           },
-          { min: 11, message: "请输入正确的手机号码", trigger: "blur" }
+          {
+            pattern: /^1[123457890]\d{9}$/,
+            min: 11,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        realName: [
+          { required: true, message: "请输入真实姓名", trigger: "blur" }
+        ],
+        idCard: [
+          { required: true, message:"请输入身份证号码", trigger: "blur" },
+          {
+            pattern: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+            message: "请输入正确的身份证号",
+            trigger: "blur"
+          }
         ]
       },
       resignFormVisible: false,
@@ -142,8 +154,6 @@ export default {
               this.$store.dispatch("setUsername", this.loginInfo.username);
               // 存token
               this.$store.dispatch("setToken", res.data.data.token);
-              // 存头像url
-              this.$store.dispatch("setAvatarUrl", res.data.data.avatarUrl);
               this.$router.push({ path: "/course" });
             } else {
               this.$message({
@@ -167,7 +177,9 @@ export default {
               qs.stringify({
                 username: this.resignInfo.name,
                 password: this.resignInfo.password,
-                phoneNum: this.resignInfo.phoneNum
+                phoneNum: this.resignInfo.phoneNum,
+                realName: this.resignInfo.realName,
+                idCard: this.resignInfo.idCard
               }),
               {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" }
@@ -211,13 +223,12 @@ export default {
 
 .login-form-container {
   height: 100%;
-
 }
 
 .login-form-container > .el-form {
   position: relative;
   width: 420px;
-    top: 20%;
+  top: 20%;
   max-width: 100%;
   padding: 35px 35px 0;
   margin: auto;

@@ -5,8 +5,6 @@
       <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">{{ item.navItem }}</el-menu-item>
 
       <div class="right-menu">
-        <!-- <el-link type="primary">登陆</el-link>
-        <el-link>注册</el-link>-->
         <!-- 右上角用户图标 -->
         <el-dropdown @command="handleCommand">
           <div class="avatar-wrapper">
@@ -25,22 +23,51 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       navList: [
         { name: "/course", navItem: "我的课程" },
-        { name: "/statistics", navItem: "数据统计" },
         { name: "/resource", navItem: "课程资源" },
-        { name: "/courseManager", navItem: "课程管理" }
+        { name: "/courseManager", navItem: "课程管理" },
+        { name: "/userManager", navItem: "用户管理" }
       ],
       src: ""
     };
   },
-  mounted: function() {
+  created: function() {
     this.getAvatar();
   },
+  mounted: function() {
+    this.getRole();
+  },
   methods: {
+    getRole() {
+      // 利用token获取用户信息
+      axios
+        .post("/api/getUserInfo", "", {
+          headers: { Token: this.$store.state.token }
+        })
+        .then(res => {
+          if (res.data.success === true) {
+            // 存头像url
+            this.$store.dispatch(
+              "setAvatarUrl",
+              res.data.data.userInfo.avatarUrl
+            );
+            // 存用户名
+            this.$store.dispatch(
+              "setUsername",
+              res.data.data.userInfo.username
+            );
+            // 存用户权限
+            this.$store.dispatch("setRole", res.data.data.userInfo.role);
+            console.log(this.$store.state.role);
+          }
+        });
+    },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -51,9 +78,11 @@ export default {
         this.$store.dispatch("setUsername", null);
         this.$store.dispatch("setToken", null);
         this.$store.dispatch("setAvatarUrl", null);
+        this.$store.dispatch("setRole", null);
         window.sessionStorage.removeItem("username");
         window.sessionStorage.removeItem("token");
         window.sessionStorage.removeItem("avatarUrl");
+        window.sessionStorage.removeItem("role");
         this.$router.push({ path: "/" });
         this.$message({
           showClose: true,

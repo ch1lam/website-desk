@@ -4,7 +4,6 @@
       <video
         id="myVideo"
         class="video-js vjs-big-play-centered"
-
         ref="video"
         width="800"
         height="600"
@@ -41,6 +40,7 @@ export default {
   },
   data() {
     return {
+      currentChapterId:"",
       videoOptions: {
         autoplay: false,
         height: 600,
@@ -69,30 +69,45 @@ export default {
     };
   },
   mounted: function() {
-    this.getAllChapter();
-    // this.initVideo();
+    this.getCurrentChapterId();
   },
   methods: {
-    // initVideo() {
-    //   //初始化视频方法
-    //   this.myPlayer = this.$video(this.myVideo, {
-    //     //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
-    //     controls: true,
-    //     //自动播放属性,muted:静音播放
-    //     autoplay: "muted",
-    //     //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
-    //     preload: "auto",
-    //     //设置视频播放器的显示宽度（以像素为单位）
-    //     width: "800px",
-    //     //设置视频播放器的显示高度（以像素为单位）
-    //     height: "400px"
-    //   });
-    // },
-    getAllChapter() {
+
+getCurrentChapterId() {
+      axios
+        .post(
+          "/api/teacher/getBigChapterId",
+          qs.stringify({
+            courseId: this.$route.params.id
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Token: this.$store.state.token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.success === true) {
+            this.currentChapterId = res.data.data.rootId;
+ this.getAllChapter(this.currentChapterId);
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: "课程未添加",
+              center: true
+            });
+          }
+        });
+    },
+
+
+    getAllChapter(id) {
       axios
         .post(
           "/api/student/getAllChapter",
-          qs.stringify({ id: this.$route.params.id }),
+          qs.stringify({ id: id }),
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
@@ -108,9 +123,6 @@ export default {
     },
     handleNodeClick(data) {
       this.$refs.video.src = "/api/guest/video?id=" + data.id;
-
-      // this.$ref.video11.options = this.videoOptions;
-      // console.log(this.$ref.video11.options);
     }
   }
 };
@@ -122,13 +134,22 @@ export default {
 .el-col {
   height: 100%;
 }
+.el-tree-node > .el-tree-node__children {
+  overflow: visible;
+}
+.el-tree {
+  min-width: 100%;
+  display: inline-block !important;
+}
 .videoBox {
   display: flex;
   justify-content: center;
 }
 .tree_warpper {
-  display: flex;
-  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: scroll;
+  height: 100%;
+  background-color: #ffffff;
   background-color: white;
   padding: 30px;
   border-right-style: solid;

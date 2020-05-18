@@ -10,10 +10,10 @@
       </el-table-column>
       <el-table-column label="操作" align="right">
         <template slot="header">
-          <el-button size="mini" type="primary" @click="addFormVisible=true">新增课程</el-button>
+          <el-button size="mini" type="primary" @click="handleAddCourse">新增课程</el-button>
         </template>
         <template slot-scope="scope">
-          <el-button size="mini" type="info" @click="handleDetail(scope.row)">详细信息</el-button>
+          <el-button size="mini" type="info" @click="handleDetail(scope)">详细信息</el-button>
           <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm
             confirmButtonText="好的"
@@ -21,7 +21,7 @@
             icon="el-icon-info"
             iconColor="red"
             title="确定删除该课程吗？"
-            @onConfirm="handleDelete(scope.row)"
+            @onConfirm="handleDelete(scope.$index,scope.row)"
           >
             <el-button size="mini" type="danger" style="margin-left: 10px" slot="reference">删除</el-button>
           </el-popconfirm>
@@ -71,7 +71,8 @@ export default {
       courses: [],
       addCourseInfo: {
         courseName: "",
-        teacherName: ""
+        teacherName: "",
+        sequence: ""
       },
       editCourseInfo: {
         id: "",
@@ -86,10 +87,16 @@ export default {
     this.getAllCourseInfo();
   },
   methods: {
+    handleAddCourse() {
+      this.addCourseInfo.sequence = this.courses.length + 1;
+      // console.log(this.courses.length+1)
+      // console.log(this.addCourseInfo.sequence)
+      this.addFormVisible = true;
+    },
     getAllCourseInfo() {
       axios({
         method: "post",
-        url: "/api/student/getAllCourseInfo",
+        url: "/api/student/getAllCourseInfo2",
         headers: {
           Token: this.$store.state.token
         }
@@ -145,7 +152,8 @@ export default {
           "/api/teacher/postCourse",
           qs.stringify({
             courseName: this.addCourseInfo.courseName,
-            teacherName: this.addCourseInfo.teacherName
+            teacherName: this.addCourseInfo.teacherName,
+            sequence: this.addCourseInfo.sequence
           }),
           {
             headers: {
@@ -174,12 +182,13 @@ export default {
           this.getAllCourseInfo();
         });
     },
-    handleDelete(row) {
+    handleDelete(index, row) {
       axios
         .post(
           "/api/teacher/deleteCourse",
           qs.stringify({
-            id: row.id
+            id: row.id,
+            sequence: index+1
           }),
           {
             headers: {
@@ -207,8 +216,11 @@ export default {
           this.getAllCourseInfo();
         });
     },
-    handleDetail(row) {
-      this.$router.push({ path: `/chapterManager/${row.id}` });
+    handleDetail(scope) {
+      this.$router.push({
+        name: "ChapterManager",
+        params: { id: scope.row.id, sequence: scope.$index + 1 }
+      });
     }
   }
 };

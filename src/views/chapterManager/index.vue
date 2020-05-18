@@ -1,42 +1,44 @@
 <template>
   <div class="box">
-    <div class="header_warpper">
-      <el-page-header @back="goBack" content="详情页面"></el-page-header>
-    </div>
     <el-row>
       <el-col :span="10" class="tree_warpper">
+        <div class="header_warpper">
+          <el-page-header @back="goBack" content="详情页面"></el-page-header>
+        </div>
         <el-alert title="默认添加章节到子章节的最后顺位" type="warning" show-icon></el-alert>
         <el-alert title="删除同级章节时请务必从最后章节删起" type="error" show-icon></el-alert>
         <el-button size="mini" class="addbutton" type="success" @click="addBigChapter">添加大章节</el-button>
-        <el-tree
-          :data="chapters"
-          :props="defaultProps"
-          :highlight-current="true"
-          :default-expand-all="true"
-          :expand-on-click-node="false"
-          @node-click="handleNodeClick"
-          ref="tree"
-        >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
-            <span>
-              <el-button
-                type="text"
-                style="  margin-right:10px;"
-                size="mini"
-                @click="() => append(node)"
-              >添加小节</el-button>
-              <el-popover placement="top" width="160" :ref="'popover-'+data.id">
-                <p>确定删除吗？</p>
-                <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="pCancel(data.id)">取消</el-button>
-                  <el-button type="primary" size="mini" @click="deleteSubmit(data)">确定</el-button>
-                </div>
-                <el-button type="text" size="mini" slot="reference" @click="pOpen(data.id)">删除</el-button>
-              </el-popover>
+        <div class="tree_box">
+          <el-tree
+            :data="chapters"
+            :props="defaultProps"
+            :highlight-current="true"
+            :default-expand-all="true"
+            :expand-on-click-node="false"
+            @node-click="handleNodeClick"
+            ref="tree"
+          >
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span>{{ node.label }}</span>
+              <span>
+                <el-button
+                  type="text"
+                  style="  margin-right:10px;"
+                  size="mini"
+                  @click="() => append(node)"
+                >添加小节</el-button>
+                <el-popover placement="top" width="160" :ref="'popover-'+data.id">
+                  <p>确定删除吗？</p>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="mini" type="text" @click="pCancel(data.id)">取消</el-button>
+                    <el-button type="primary" size="mini" @click="deleteSubmit(data)">确定</el-button>
+                  </div>
+                  <el-button type="text" size="mini" slot="reference" @click="pOpen(data.id)">删除</el-button>
+                </el-popover>
+              </span>
             </span>
-          </span>
-        </el-tree>
+          </el-tree>
+        </div>
       </el-col>
       <el-col :span="14" class="detail_wrapper">
         <el-upload
@@ -82,12 +84,11 @@
               :show-file-list="false"
               :on-success="videoUploadSuccess"
               :on-progress="videoUploading"
-              :limit="1"
             >
               <el-button class="uploadButton" type="primary">选择视频...</el-button>
               <div slot="tip" class="el-upload__tip">
                 <el-alert
-                  title="务必保证在叶子章节才上传视频; 视频格式只能为mp4"
+                  title="务必保证在叶子章节才上传一个视频; 视频数量为1; 视频格式只能为mp4; "
                   type="info"
                   :closable="false"
                   show-icon
@@ -114,7 +115,12 @@
             >
               <el-button class="uploadButton" type="primary">选择文件...</el-button>
               <div slot="tip" class="el-upload__tip">
-                <el-alert title="务必保证在叶子章节才上传课件; 课件格式不限" type="info" :closable="false" show-icon></el-alert>
+                <el-alert
+                  title="务必保证在叶子章节才上传课件; 课件数量不限; 课件格式不限"
+                  type="info"
+                  :closable="false"
+                  show-icon
+                ></el-alert>
               </div>
               <el-progress
                 v-if="progressFlag == true"
@@ -158,6 +164,7 @@ import qs from "qs";
 export default {
   data() {
     return {
+      currentChapterId: "",
       videoFlag: false,
       videoUploadPercent: 0,
       progressFlag: false,
@@ -167,7 +174,10 @@ export default {
       uploadVisble: false,
       imageUrl: "/api/student/getPoster?id=" + this.$route.params.id,
       uploadHeader: { Token: this.$store.state.token },
-      uploadData: { courseId: this.$route.params.id },
+      uploadData: {
+        courseId: this.$route.params.id , 
+        sequence: this.$route.params.sequence
+      },
       chapters: [],
       defaultProps: {
         id: "id",
@@ -192,7 +202,9 @@ export default {
     };
   },
   mounted: function() {
-    this.getAllChapter();
+    this.getCurrentChapterId();
+    this.uploadVideoData.sequence = this.$route.params.sequence;
+    console.log("初始化"+"当前index："+this.uploadVideoData.sequence);
   },
   methods: {
     handleNodeClick(data) {
@@ -230,18 +242,14 @@ export default {
         return isLt2M;
       }
     },
-    getAllChapter() {
+    getAllChapter(chapterId) {
       axios
-        .post(
-          "/api/student/getAllChapter",
-          qs.stringify({ id: this.$route.params.id }),
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Token: this.$store.state.token
-            }
+        .post("/api/student/getAllChapter", qs.stringify({ id: chapterId }), {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Token: this.$store.state.token
           }
-        )
+        })
         .then(res => {
           if (res.data.success === true) {
             this.chapters = res.data.data.chapters;
@@ -281,13 +289,66 @@ export default {
               center: true
             });
           }
-          this.getAllChapter();
+          this.getAllChapter(this.currentChapterId);
         });
     },
     addBigChapter() {
-      this.appendForm.parentId = this.$route.params.id;
-      this.appendForm.sequence = this.chapters.length + 1;
-      this.addFormVisible = true;
+      axios
+        .post(
+          "/api/teacher/getBigChapterId",
+          qs.stringify({
+            courseId: this.$route.params.id
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Token: this.$store.state.token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.success === true) {
+            this.appendForm.parentId = res.data.data.rootId;
+            this.appendForm.sequence = this.chapters.length + 1;
+            this.addFormVisible = true;
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: "课程未添加",
+              center: true
+            });
+          }
+        });
+    },
+    getCurrentChapterId() {
+      axios
+        .post(
+          "/api/teacher/getBigChapterId",
+          qs.stringify({
+            courseId: this.$route.params.id
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Token: this.$store.state.token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.success === true) {
+            this.currentChapterId = res.data.data.rootId;
+            console.log(res.data.data);
+            this.getAllChapter(this.currentChapterId);
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: "课程未添加",
+              center: true
+            });
+          }
+        });
     },
 
     deleteSubmit(data) {
@@ -322,7 +383,7 @@ export default {
               center: true
             });
           }
-          this.getAllChapter();
+          this.getAllChapter(this.currentChapterId);
         });
     },
     updateSubmit() {
@@ -357,7 +418,7 @@ export default {
               center: true
             });
           }
-          this.getAllChapter();
+          this.getAllChapter(this.currentChapterId);
         });
     },
     //上传前的函数(用于验证上传文件格式及大小)
@@ -367,8 +428,9 @@ export default {
         return false;
       }
     },
+    // eslint-disable-next-line no-unused-vars
     videoUploadSuccess(res, file, fileList) {
-      file.videoFlag = false;
+      this.videoFlag = false;
       this.videoUploadPercent = 0;
       if (file.status == "success") {
         this.$message({
@@ -386,9 +448,10 @@ export default {
         });
       }
     },
+    // eslint-disable-next-line no-unused-vars
     fileUploadSuccess(res, file, fileList) {
       console.log(file);
-      file.progressFlag = false;
+      this.progressFlag = false;
       this.fileUploadPercent = 0;
       if (file.status == "success") {
         this.$message({
@@ -406,10 +469,12 @@ export default {
         });
       }
     },
+    // eslint-disable-next-line no-unused-vars
     videoUploading(event, file, fileList) {
       this.videoFlag = true;
       this.videoUploadPercent = Math.abs(file.percentage.toFixed(0));
     },
+    // eslint-disable-next-line no-unused-vars
     fileuploading(event, file, fileList) {
       this.progressFlag = true;
       this.fileUploadPercent = Math.abs(file.percentage.toFixed(0));
@@ -514,6 +579,19 @@ export default {
 }
 .upload-wrapper >>> .el-upload {
   width: 100%;
+}
+.tree_box {
+  overflow-y: auto;
+  overflow-x: scroll;
+  width: auto;
+  height: 100%;
+}
+.el-tree {
+  min-width: 100%;
+  display: inline-block !important;
+}
+.el-tree-node > .el-tree-node__children {
+  overflow: visible;
 }
 </style>
 <style >

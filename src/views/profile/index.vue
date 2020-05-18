@@ -49,12 +49,17 @@
             </div>
             <el-divider />
             <div class="pane-wrapper">
-              <span>学院名： {{ userInfo.schoolName }}</span>
+              <span>学院名： {{ userInfo.collegeName }}</span>
             </div>
             <el-divider />
             <div class="pane-wrapper">
               <span>手机号： {{ userInfo.phoneNum }}</span>
             </div>
+            <el-divider />
+            <div class="pane-wrapper">
+              <span>学号： {{ userInfo.schoolNum }}</span>
+            </div>
+            <el-button style="margin:30px" @click="handleEdit">修改信息</el-button>
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="修改密码">
             <el-form :model="putPassword" ref="putPassword" :rules="rules">
@@ -81,6 +86,31 @@
           </el-tab-pane>
         </el-tabs>
       </el-col>
+
+      <el-dialog title="修改信息" :visible.sync="formVisible" center>
+        <el-form :model="editInfo">
+          <el-form-item label="用户名：">
+            <el-input :disabled="true" v-model="editInfo.username" />
+          </el-form-item>
+          <el-form-item label="性别">
+            <el-radio v-model="editInfo.gender" label="0">男</el-radio>
+            <el-radio v-model="editInfo.gender" label="1">女</el-radio>
+          </el-form-item>
+          <el-form-item label="学院名">
+            <el-input v-model="editInfo.collegeName" />
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-input v-model="editInfo.phoneNum" />
+          </el-form-item>
+          <el-form-item label="学号">
+            <el-input v-model="editInfo.schoolNum" />
+          </el-form-item>
+        </el-form>
+        <template slot="footer" class="dialog-footer">
+          <el-button @click="formVisible=false">取消</el-button>
+          <el-button type="primary" @click="handleUpdate">确认</el-button>
+        </template>
+      </el-dialog>
     </el-col>
     <el-col :span="4" />
   </el-row>
@@ -112,18 +142,29 @@ export default {
       }
     };
     return {
+      formVisible: false,
       uploadHeader: { token: this.$store.state.token },
       uploadData: { username: this.$store.state.username },
       activeName: "用户信息",
       imageUrl: "/api/student/getAvatar?username=" + this.$store.state.username,
       userInfo: {
+        id: "",
         username: "null",
         gender: "男",
         realName: "null",
         idCard: "null",
         phoneNum: "null",
-        schoolName: "null",
+        collegeName: "null",
+        schoolNum: "null",
         role: "null"
+      },
+      editInfo: {
+        id: "null",
+        username: "null",
+        gender: "0",
+        phoneNum: "null",
+        collegeName: "null",
+        schoolNum: ""
       },
       putPassword: {
         oldPassword: "",
@@ -147,6 +188,53 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    handleUpdate() {
+      axios
+        .post(
+          "/api/student/putUserInfo",
+          qs.stringify({
+            id: this.editInfo.id,
+            username: this.editInfo.username,
+            gender: this.editInfo.gender,
+            phoneNum: this.editInfo.phoneNum,
+            collegeName: this.editInfo.collegeName,
+            schoolNum: this.editInfo.schoolNum
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              token: this.$store.state.token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.success === true) {
+            this.formVisible = false;
+            this.$message({
+              showClose: true,
+              type: "success",
+              message: res.data.message,
+              center: true
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: res.data.message,
+              center: true
+            });
+          }
+          this.getUserInfo();
+        });
+    },
+    handleEdit() {
+      this.editInfo.id = this.userInfo.id;
+      this.editInfo.username = this.userInfo.username;
+      this.editInfo.collegeName = this.userInfo.collegeName;
+      this.editInfo.schoolNum = this.userInfo.schoolNum;
+      this.editInfo.phoneNum = this.userInfo.phoneNum;
+      this.formVisible = true;
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -198,10 +286,12 @@ export default {
             } else if (res.data.data.userInfo.gender === 1) {
               this.userInfo.gender = "女";
             }
+            this.userInfo.id = res.data.data.userInfo.id;
             this.userInfo.realName = res.data.data.userInfo.realName;
             this.userInfo.idCard = res.data.data.userInfo.idCard;
             this.userInfo.phoneNum = res.data.data.userInfo.phoneNum;
-            this.userInfo.schoolName = res.data.data.userInfo.collegeName;
+            this.userInfo.collegeName = res.data.data.userInfo.collegeName;
+            this.userInfo.schoolNum = res.data.data.userInfo.schoolNum;
             this.userInfo.role = res.data.data.userInfo.role;
           }
         });

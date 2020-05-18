@@ -1,95 +1,127 @@
 <template>
   <div>
-    <el-upload
-      :action="UploadUrl"
-      :on-preview="handlePreview"
-      :on-success="handleSuccess"
-      :on-remove="handleRemove"
-      :before-remove="beforeRemove"
-      multiple
-      :limit="3"
-      :on-exceed="handleExceed"
-      :file-list="fileList"
-    >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传mp4格式的文件</div>
-      <div>
-        <el-button @click="download">下载</el-button>
-      </div>
-    </el-upload>
-    <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
+    <el-table :data="fileList" style="width: 100%" stripe>
+      <el-table-column prop="id" label="id" width="80" />
+
+      <el-table-column prop="name" label="文件名" />
+
+      <el-table-column prop="size" label="文件大小" width="100">
+        <template slot-scope="scope">
+          <el-tag>{{scope.row.size}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" label="上传日期" />
+      <el-table-column prop="chapterId" label="所属章节id" width="100" />
+      <el-table-column prop="url" label="文件路径" />
+      <el-table-column label="操作" align="right">
+        <template slot-scope="scope">
+          <el-button size="mini">
+            <a :href="'/api/student/download/'+scope.row.id" :download="scope.row.name">下载</a>
+          </el-button>
+          <template v-if="role=='admin'">
+            <el-popconfirm
+              confirmButtonText="好的"
+              cancelButtonText="取消"
+              icon="el-icon-info"
+              iconColor="red"
+              title="确定删除该文件吗？"
+              @onConfirm="handleDelete(scope.row)"
+            >
+              <el-button size="mini" type="danger" style="margin-left: 10px" slot="reference">删除</el-button>
+            </el-popconfirm>
+          </template>
+          <template v-else-if="role=='teacher'">
+            <el-popconfirm
+              confirmButtonText="好的"
+              cancelButtonText="取消"
+              icon="el-icon-info"
+              iconColor="red"
+              title="确定删除该文件吗？"
+              @onConfirm="handleDelete(scope.row)"
+            >
+              <el-button size="mini" type="danger" style="margin-left: 10px" slot="reference">删除</el-button>
+            </el-popconfirm>
+          </template>
+        </template>
+      </el-table-column>
     </el-table>
-    
   </div>
 </template>
 
+
+
 <script>
 import axios from "axios";
+import qs from "qs";
 
 export default {
   data() {
     return {
       UploadUrl: "/api/guest/uploadVideo",
       fileList: [],
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
+      role: ""
     };
   },
+  mounted: function() {
+    this.getAllFileInfo();
+    this.role = this.$store.state.role;
+  },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(fileList);
+    handleDelete(row) {
+      axios
+        .post(
+          "/api/teacher/deleteFile",
+          qs.stringify({
+            id: row.id
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Token: this.$store.state.token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.success === true) {
+            this.getAllFileInfo();
+            this.$message({
+              showClose: true,
+              type: "success",
+              message: res.data.message,
+              center: true
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: res.data.message,
+              center: true
+            });
+          }
+          this.getAllUserInfo();
+        });
     },
-    handlePreview(file) {
-      console.log(file);
-    },
-    // elementUI要求要有fileList
-    handleSuccess(res, file, fileList) {
-      this.fileList.push({
-        name: file.name
-      });
-      console.log(res);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
-    download(){
-      axios.post(
-        "http"+""
-      )
-
+    getAllFileInfo() {
+      axios
+        .post("/api/student/getAllFileInfo", "", {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Token: this.$store.state.token
+          }
+        })
+        .then(res => {
+          if (res.data.success === true) {
+            this.fileList = res.data.data.fileList;
+          } else {
+            this.$message({
+              showClose: true,
+              type: "error",
+              message: res.data.message,
+              center: true
+            });
+          }
+          this.getAllUserInfo();
+        });
     }
   }
 };
