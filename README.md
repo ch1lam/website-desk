@@ -1,38 +1,16 @@
-# 《毛概》课程网站
-## 技术架构
-@vue/cli v4.2.3
-node.js v12.14.0
-elementUI v2.13.2
-## 后端API
-[后端接口使用springboot实现](https://github.com/ch1lamLee/website-back)
-## 主要实现功能
-### 用户管理
-用户表删改查
-### 课程管理
-课程的增删改查
-### 章节管理
-1. 调整章节的层级
-2. 上传课程
-3. 上传课件
-4.章节增删改查
-### 个人信息管理
-1. 上传头像
-2. 个人信息查询修改
-3. 修改密码
-### 课程资源管理
-1. 下载课程资源
-2. 删除课程资源
-### 课程在线播放
-1. 树状列表菜单
-2. 视频在线播放
-## 目前存在的问题
-1. js代码不够简洁
-2. axios请求未复用
-3. el-popover组件bug未解决 ps.未来可能弃用elementui
-4. 上传头像后，不能及时刷新header中的小头像
-## 未实现功能
-1. 通过动态路由实现权限控制
-2. 分页查询
-3. 利用element中的el-tree实现章节自由拖动
-4. 搜索功能
-5. 排序功能
+# Vue 3 + TypeScript + Vite
+
+This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+
+## Recommended IDE Setup
+
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+
+## Type Support For `.vue` Imports in TS
+
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+
+1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
+2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+
+You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
