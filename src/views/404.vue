@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : ch1lam
  * @Date         : 2022-05-20 18:25:35
- * @LastEditTime : 2022-05-20 18:25:48
+ * @LastEditTime : 2022-05-23 19:16:54
  * @LastEditors  : chilam
  * @FilePath     : \website-desk\src\views\404.vue
 -->
@@ -12,16 +12,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  setup() {
-
-
-    return {}
-  }
-})
+<script setup lang="ts">
 </script>
 
 <style scoped>
