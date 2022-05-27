@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : ch1lam
  * @Date         : 2022-05-20 15:28:49
- * @LastEditTime : 2022-05-24 15:37:49
+ * @LastEditTime : 2022-05-27 23:14:48
  * @LastEditors  : chilam
  * @FilePath     : \website-desk\src\App.vue
 -->
@@ -11,9 +11,7 @@
 </script>
 
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
 <style>
