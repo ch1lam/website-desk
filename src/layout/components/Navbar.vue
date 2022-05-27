@@ -2,32 +2,30 @@
  * @Description  :
  * @Author       : ch1lam
  * @Date         : 2022-05-23 16:42:35
- * @LastEditTime : 2022-05-24 18:47:47
+ * @LastEditTime : 2022-05-28 01:41:15
  * @LastEditors  : chilam
  * @FilePath     : \website-desk\src\layout\components\Navbar.vue
 -->
 <template>
   <div class="nav-bar">
-    <!-- 基本菜单栏 -->
-    <el-menu :default-active="route.path" mode="horizontal" @select="handleSelect" class="el-menu-demo">
+    <el-menu class="el-menu-demo" :default-active="route.path" mode="horizontal" router @select="handleSelect">
       <el-menu-item v-for="(item, i) in navList" :key="i" :index="item.name">
         {{ item.navItem }}
       </el-menu-item>
-      <el-dropdown @command="handleCommand" class="right-menu">
-        <div class=" avatar-wrapper">
-          <el-avatar :src="src">user</el-avatar>
-          <i class="el-icon-caret-bottom" />
-        </div>
-
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="a">个人信息</el-dropdown-item>
-            <el-dropdown-item command="b">注销</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
     </el-menu>
-    <!-- 右上角用户图标 -->
+    <el-dropdown class="right-menu" @command="handleCommand">
+      <div class=" avatar-wrapper">
+        <el-avatar :src="src">user</el-avatar>
+        <i class="el-icon-caret-bottom" />
+      </div>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="a">个人信息</el-dropdown-item>
+          <el-dropdown-item command="b">注销</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
 
   </div>
 </template>
@@ -58,8 +56,20 @@ const getRole = () => {
 };
 
 const handleCommand = (command: string) => {
+  switch (command) {
+    case "a":
+      router.push("/profile");
+      break;
+    case "b":
+      store.$reset();
+      router.push({ path: "/" });
+      break;
+    default:
+      console.log("注销失败");
+      break;
+  }
   if (command === "a") {
-    router.push("/profile");
+
   } else if (command === "b") {
     // TODO
     store.$reset();
