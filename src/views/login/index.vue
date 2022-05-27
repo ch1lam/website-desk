@@ -70,12 +70,21 @@ const loginInfo = reactive(
   }
 )
 
-const resignInfo = reactive(
+interface ResignInfo {
+  username: string,
+  password: string,
+  verifyPassword: string,
+  phoneNum: number | null,
+  realName: string,
+  idCard: "",
+}
+
+const resignInfo = reactive<ResignInfo>(
   {
     username: "",
     password: "",
     verifyPassword: "",
-    phoneNum: "",
+    phoneNum: null,
     realName: "",
     idCard: "",
   }
