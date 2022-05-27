@@ -2,7 +2,7 @@
  * @Description  : vite config
  * @Author       : ch1lam
  * @Date         : 2022-05-20 15:28:59
- * @LastEditTime : 2022-05-20 17:32:56
+ * @LastEditTime : 2022-05-28 00:06:15
  * @LastEditors  : chilam
  * @FilePath     : \website-desk\vite.config.ts
  */
@@ -18,9 +18,11 @@ export default defineConfig({
     vue(),
     AutoImport({
       resolvers: [ElementPlusResolver()],
+      dts: true,
     }),
     Components({
       resolvers: [ElementPlusResolver()],
+      dts: true,
     }),
   ],
   resolve: {
