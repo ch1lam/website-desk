@@ -2,7 +2,7 @@
  * @Description  :
  * @Author       : ch1lam
  * @Date         : 2022-05-20 18:30:59
- * @LastEditTime : 2022-05-27 00:41:52
+ * @LastEditTime : 2022-05-28 01:57:43
  * @LastEditors  : chilam
  * @FilePath     : \website-desk\src\views\login\index.vue
 -->
@@ -12,18 +12,16 @@
       <div class="title-container">
         <h3>用户登陆</h3>
       </div>
-      <el-form-item label="username">
+      <el-form-item class="test">
         <el-input v-model="loginInfo.username" placeholder="请输入用户名" clearable />
-        <!-- <i slot="prefix" class="el-input__icon el-icon-user"></i> -->
       </el-form-item>
-      <el-form-item label="password">
+      <el-form-item>
         <el-input v-model="loginInfo.password" placeholder="请输入密码" clearable show-password />
-        <!-- <i slot="prefix" class="el-input__icon el-icon-lock"></i> -->
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="login">登 录</el-button>
         <el-divider />
-        <el-button type="text" @click="resignFormVisible = true">注 册</el-button>
+        <el-button @click="resignFormVisible = true">注 册</el-button>
       </el-form-item>
     </el-form>
 
@@ -50,7 +48,6 @@
         <el-form-item>
           <el-button type="primary" @click="resign(ruleFormRef)">注册</el-button>
           <el-button type="primary" @click="resetForm(ruleFormRef)">重置</el-button>
-
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -188,7 +185,19 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
-.title-container {
+.login-form-container {
+  width: min(100%, 450px);
+  padding: 2rem;
+  margin: 0 auto;
+  background-color: gray;
+  border-radius: 10px;
+}
+
+.test {
+  margin: 0, 0, 200px, 0
+}
+
+/* .title-container {
   position: relative;
 }
 
@@ -246,5 +255,5 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 .el-dialog__wrapper>>>.el-dialog {
   border-radius: 15px;
-}
+} */
 </style>
