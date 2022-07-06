@@ -1,11 +1,3 @@
-<!--
- * @Description  :
- * @Author       : ch1lam
- * @Date         : 2022-05-20 15:28:49
- * @LastEditTime : 2022-05-29 01:11:00
- * @LastEditors  : chilam
- * @FilePath     : \website-desk\src\App.vue
--->
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 </script>

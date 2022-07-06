@@ -1,11 +1,3 @@
-<!--
- * @Description  :
- * @Author       : ch1lam
- * @Date         : 2022-05-20 18:30:59
- * @LastEditTime : 2022-05-28 01:57:43
- * @LastEditors  : chilam
- * @FilePath     : \website-desk\src\views\login\index.vue
--->
 <template>
   <div class="login-form-container">
     <el-form :model="loginInfo">

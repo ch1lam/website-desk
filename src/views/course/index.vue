@@ -1,11 +1,3 @@
-<!--
- * @Description  :
- * @Author       : ch1lam
- * @Date         : 2022-05-20 18:24:12
- * @LastEditTime : 2022-05-29 01:11:16
- * @LastEditors  : chilam
- * @FilePath     : \website-desk\src\views\course\index.vue
--->
 <template>
   <div class="container">
     <el-card shadow="hover" @click.native="handleClick(course)" v-for="course in courses" :key="course.id">

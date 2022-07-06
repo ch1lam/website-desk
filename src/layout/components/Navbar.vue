@@ -1,11 +1,3 @@
-<!--
- * @Description  :
- * @Author       : ch1lam
- * @Date         : 2022-05-23 16:42:35
- * @LastEditTime : 2022-05-28 01:41:15
- * @LastEditors  : chilam
- * @FilePath     : \website-desk\src\layout\components\Navbar.vue
--->
 <template>
   <div class="nav-bar">
     <el-menu class="el-menu-demo" :default-active="route.path" mode="horizontal" router @select="handleSelect">

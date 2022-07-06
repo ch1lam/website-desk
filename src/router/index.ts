@@ -1,11 +1,3 @@
-/*
- * @Description  : 路由表
- * @Author       : ch1lam
- * @Date         : 2022-05-20 16:55:06
- * @LastEditTime : 2022-05-20 20:08:18
- * @LastEditors  : chilam
- * @FilePath     : \website-desk\src\router\index.ts
- */
 import { createRouter, createWebHistory } from "vue-router";
 
 const Layout = () => import("../layout/index.vue");
