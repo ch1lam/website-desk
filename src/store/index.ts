@@ -1,15 +1,25 @@
 import { defineStore } from "pinia";
+import { getToken } from "../utils/auth";
+
+interface State {
+  username: string;
+  token: string;
+  avatarUrl: string;
+  role: string;
+}
 
 export const useStore = defineStore("main", {
-  state: () => {
-    return {
-      username: window.sessionStorage.getItem("username"),
-      token: window.sessionStorage.getItem("token"),
-      avatarUrl: window.sessionStorage.getItem("avatarUrl"),
-      role: window.sessionStorage.getItem("role"),
-    };
-  },
+  state: (): State => ({
+    username: "",
+    token: getToken() ?? "",
+    avatarUrl: "",
+    role: "",
+  }),
 
   getters: {},
-  actions: {},
+  actions: {
+    clearUser() {
+      this.$reset();
+    },
+  },
 });
