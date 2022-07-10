@@ -76,13 +76,12 @@ const editCourseInfo = reactive({
   teacherName: "",
 })
 
-let courses: any[] = [];
-const addFormVisible = ref(false);
 const editFormVisible = ref(false);
+const addFormVisible = ref(false);
+let courses: any[] = [];
 let router = useRouter();
-onMounted(() => {
-  getAllCourseInfo();
-})
+
+onMounted(() => { getAllCourseInfo() })
 const getAllCourseInfo = () => {
   // TODO
   axios.post("/api/student/getAllCourseInfo2", { header: { Token: "test" } }).then(res => {
@@ -97,7 +96,7 @@ const handleAdd = () => {
   // TODO
 }
 
-const handleEdit = (row:any) => {
+const handleEdit = (row: any) => {
   editCourseInfo.id = row.id;
   editCourseInfo.courseName = row.name;
   editCourseInfo.teacherName = row.teacherName;

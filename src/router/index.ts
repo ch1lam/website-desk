@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-const Layout = () => import("../layout/index.vue");
+const Layout = () => import("@/layout/index.vue");
 const PageNotFound = () => import("@/views/404.vue");
-const Login = () => import("../views/login/index.vue");
+const Login = () => import("@/views/login/index.vue");
 const Course = () => import("@/views/course/index.vue");
 const Dashboard = () => import("@/views/dashboard/index.vue");
 const Resource = () => import("@/views/resource/index.vue");
