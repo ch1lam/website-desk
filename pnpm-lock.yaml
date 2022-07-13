@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@faker-js/faker': ^7.3.0
   '@vitejs/plugin-vue': ^2.3.3
   axios: ^0.27.2
   axios-retry: ^3.3.1
@@ -23,6 +24,7 @@ dependencies:
   vue-router: registry.npmmirror.com/vue-router/4.1.1_vue@3.2.37
 
 devDependencies:
+  '@faker-js/faker': registry.npmmirror.com/@faker-js/faker/7.3.0
   '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/2.3.3_vite@2.9.13+vue@3.2.37
   typescript: registry.npmmirror.com/typescript/4.7.4
   unplugin-auto-import: registry.npmmirror.com/unplugin-auto-import/0.7.2_vite@2.9.13
@@ -88,6 +90,13 @@ packages:
     dependencies:
       vue: registry.npmmirror.com/vue/3.2.37
     dev: false
+
+  registry.npmmirror.com/@faker-js/faker/7.3.0:
+    resolution: {integrity: sha512-1W0PZezq2rxlAssoWemi9gFRD8IQxvf0FPL5Km3TOmGHFG7ib0TbFBJ0yC7D/1NsxunjNTK6WjUXV8ao/mKZ5w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@faker-js/faker/-/faker-7.3.0.tgz}
+    name: '@faker-js/faker'
+    version: 7.3.0
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    dev: true
 
   registry.npmmirror.com/@floating-ui/core/0.7.3:
     resolution: {integrity: sha512-buc8BXHmG9l82+OQXOFU3Kr2XQx9ys01U/Q9HMIrZ300iLc8HLMgh7dcCqgYzAzf4BkoQvDcXf5Y+CuEZ5JBYg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@floating-ui/core/-/core-0.7.3.tgz}
