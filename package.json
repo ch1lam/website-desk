@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "json-server": "json-server --watch ./mock/data.js --middlewares ./mock/middlewares.js --routes ./mock/routes.json --port 8000"
   },
   "dependencies": {
     "axios": "^0.27.2",
