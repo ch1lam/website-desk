@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { id } from "element-plus/es/locale";
 import { ref, reactive, onMounted } from "vue";
 
 
