@@ -111,9 +111,17 @@ const login = async () => {
       center: true,
     });
   } else {
-    const [err, data] = await loginReq(loginInfo.username, loginInfo.password);
-    console.log(err);
+    const data = await loginReq(loginInfo.username, loginInfo.password);
     console.log(data);
+    if (data && data.success) {
+      ElMessage({
+        showClose: true,
+        type: "success",
+        message: "登陆成功~~｡◕‿◕｡~~",
+        center: true,
+      });
+      router.push("/course");
+    }
   }
 };
 
