@@ -18,6 +18,18 @@ export const useStore = defineStore("main", {
 
   getters: {},
   actions: {
+    setUsername(username: string) {
+      this.username = username;
+    },
+    setToken(token: string) {
+      this.token = token;
+    },
+    setAvatarUrl(avatarUrl: string) {
+      this.avatarUrl = avatarUrl;
+    },
+    setRole(role: string) {
+      this.role = role;
+    },
     clearUser() {
       this.$reset();
     },
