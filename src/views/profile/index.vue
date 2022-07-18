@@ -68,7 +68,7 @@
             >
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="修改密码">
-            <el-form :model="putPassword" ref="putPassword" :rules="rules">
+            <el-form :model="putPassword" ref="putPasswordRef" :rules="rules">
               <el-form-item label="请输入当前密码" prop="oldPassword">
                 <el-input
                   type="password"
@@ -91,7 +91,7 @@
                 ></el-input>
               </el-form-item>
             </el-form>
-            <el-button @click="commitPassword('putPassword')"
+            <el-button @click="commitPassword(putPasswordRef)"
               >提交修改</el-button
             >
           </el-tab-pane>
@@ -139,15 +139,19 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage, FormInstance } from "element-plus";
+import { useStore } from "../../store";
 
 const route = useRoute();
 const router = useRouter();
+const store = useStore();
+const putPasswordRef = ref<FormInstance>();
 
 const formVisible = ref(false);
-const uploadHeader = ref({ token: store.state.token });
-const uploadData = ref({ username: store.state.username });
+const uploadHeader = ref({ token: store.token });
+const uploadData = ref({ username: store.username });
 const activeName = ref("用户信息");
-const imageUrl = ref("/api/student/getAvatar?username=" + store.state.username);
+const imageUrl = ref("/api/student/getAvatar?username=" + store.username);
 const userInfo = reactive({
   id: "",
   username: "null",
@@ -172,6 +176,29 @@ const putPassword = reactive({
   newPassword: "",
   newPassword2: "",
 });
+
+const validatePassword = (rule: any, value: any, callback: any) => {
+  if (value === "") {
+    callback(new Error("请输入密码"));
+  } else {
+    if (putPassword.newPassword2 !== "") {
+      if (!putPasswordRef.value) return;
+      putPasswordRef.value.validateField("newPassword2");
+    }
+    callback();
+  }
+};
+
+const validatePassword2 = (rule: any, value: any, callback: any) => {
+  if (value === "") {
+    callback(new Error("请再次输入密码"));
+  } else if (value !== putPassword.newPassword) {
+    callback(new Error("两次输入密码不一致!"));
+  } else {
+    callback();
+  }
+};
+
 const rules = reactive({
   oldPassword: [
     { required: true, validator: validatePassword, trigger: "blur" },
@@ -190,42 +217,58 @@ onMounted(() => {
 
 // TODO
 
-const validatePassword = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请输入密码"));
-  } else {
-    if (putPassword.newPassword2 !== "") {
-      $refs.putPassword.validateField("newPassword2");
-    }
-    callback();
-  }
+const handleUpdate = () => {
+  // TODO request
 };
 
-const validatePassword2 = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
-  } else if (value !== this.putPassword.newPassword) {
-    callback(new Error("两次输入密码不一致!"));
-  } else {
-    callback();
-  }
+const handleEdit = () => {
+  editInfo.id = userInfo.id;
+  editInfo.username = userInfo.username;
+  editInfo.collegeName = userInfo.collegeName;
+  editInfo.schoolNum = userInfo.schoolNum;
+  editInfo.phoneNum = userInfo.phoneNum;
+  formVisible.value = true;
 };
 
-const handleUpdate = () => {};
+const handleAvatarSuccess = (res: any, file: any) => {
+  imageUrl.value = URL.createObjectURL(file.raw);
+  store.setAvatarUrl("/api/student/getAvatar?username=" + store.username);
+};
 
-const handleEdit = () => {};
+const handleAvatarError = (err: any) => {
+  console.log(err);
+};
 
-const handleClick = (tab: any, event: any) => {};
+const beforeAvatarUpload = (file: any) => {
+  const isJPG = file.type === "image/jpeg";
+  const isPNG = file.type === "image/png";
+  const isLt2M = file.size / 1024 / 1024 < 2;
 
-const handleAvatarSuccess = (res: any, file: any) => {};
-
-const handleAvatarError = (err: any) => {};
+  if (!isJPG && !isPNG) {
+    ElMessage({
+      message: "上传头像图片只能是 JPG 或 PNG 格式!",
+      type: "warning",
+    });
+    return isJPG && isPNG;
+  }
+  if (!isLt2M) {
+    ElMessage({
+      message: "上传头像图片大小不能超过 2MB!",
+      type: "warning",
+    });
+    return isLt2M;
+  }
+};
 
 const getAvatar = () => {};
 
-const getUserInfo = () => {};
+const getUserInfo = () => {
+  // TODO store & request
+};
 
-const commitPassword = () => {};
+const commitPassword = (formEl: FormInstance | undefined) => {
+  // TODO ref Form
+};
 </script>
 
 <style scoped>
