@@ -68,7 +68,12 @@
             >
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="修改密码">
-            <el-form :model="putPassword" ref="putPasswordRef" :rules="rules">
+            <el-form
+              ref="putPasswordRef"
+              :model="putPassword"
+              status-icon
+              :rules="rules"
+            >
               <el-form-item label="请输入当前密码" prop="oldPassword">
                 <el-input
                   type="password"
@@ -139,7 +144,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElMessage, FormInstance } from "element-plus";
+import { ElMessage } from "element-plus";
+import type { FormInstance } from "element-plus";
 import { useStore } from "../../store";
 
 const route = useRoute();
@@ -267,7 +273,17 @@ const getUserInfo = () => {
 };
 
 const commitPassword = (formEl: FormInstance | undefined) => {
-  // TODO ref Form
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      const { oldPassword, newPassword, newPassword2 } = putPassword;
+      console.log("submit!");
+      // TODO request
+    } else {
+      console.log("error submit!");
+      return false;
+    }
+  });
 };
 </script>
 
