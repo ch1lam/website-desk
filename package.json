@@ -9,7 +9,7 @@
     "json-server": "json-server --watch ./mock/data.js --middlewares ./mock/middlewares.js --routes ./mock/routes.json --port 8000"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "axios-retry": "^3.3.1",
     "element-plus": "^2.2.15",
     "pinia": "^2.0.21",
